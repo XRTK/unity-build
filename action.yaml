@@ -16,9 +16,9 @@ runs:
   steps:
     - id: unity-validate
       name: Unity Editor Validation
-      uses: xrtk/unity-validate@v1
+      uses: xrtk/unity-validate@main
 
-    - uses: xrtk/unity-action@v1
+    - uses: xrtk/unity-action@main
       name: Project Validation
       with:
         name: 'project-validation'
@@ -26,7 +26,7 @@ runs:
         project-path: '${{ steps.unity-validate.outputs.project-path }}'
         args: '-quit -batchmode -executeMethod XRTK.Editor.BuildPipeline.UnityPlayerBuildTools.ValidateProject'
 
-    - uses: xrtk/unity-action@v1
+    - uses: xrtk/unity-action@main
       name: '${{ inputs.build-target }}-Tests'
       with:
         name: '${{ inputs.build-target }}-Tests'
@@ -35,7 +35,7 @@ runs:
         build-target: '${{ inputs.build-target }}'
         args: '-batchmode -runEditorTests'
 
-    - uses: xrtk/unity-action@v1
+    - uses: xrtk/unity-action@main
       name: '${{ inputs.build-target }}-Build'
       with:
         name: '${{ inputs.build-target }}-Build'
