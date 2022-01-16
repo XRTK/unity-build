@@ -1,0 +1,63 @@
+name: 'Unity Build (XRTK)'
+description: 'Runs a Build using the specified build targets'
+branding:
+  icon: ''
+  color: ''
+
+inputs:
+  build-target:
+    description: 'The build target to build for.'
+    # Unity -buildTarget command line args https://docs.unity3d.com/Manual/CommandLineArguments.html
+    # StandaloneWindows64, WSAPlayer, StandaloneOSX, iOS, StandaloneLinux64, Android, Lumin, WebGL
+    defaults: ''
+
+runs:
+  using: "composite"
+  steps:
+    - id: unity-validate
+      name: Unity Editor Validation
+      uses: xrtk/unity-validate@main
+
+    - uses: xrtk/unity-action@main
+      name: Project Validation
+      with:
+        name: 'project-validation'
+        editor-path: '${{ steps.unity-validate.outputs.editor-path }}'
+        project-path: '${{ steps.unity-validate.outputs.project-path }}'
+        args: '-quit -batchmode -executeMethod XRTK.Editor.BuildPipeline.UnityPlayerBuildTools.ValidateProject'
+
+    - uses: xrtk/unity-action@main
+      name: '${{ inputs.build-target }}-Tests'
+      with:
+        name: '${{ inputs.build-target }}-Tests'
+        editor-path: '${{ steps.unity-validate.outputs.editor-path }}'
+        project-path: '${{ steps.unity-validate.outputs.project-path }}'
+        build-target: '${{ inputs.build-target }}'
+        args: '-batchmode -runEditorTests'
+
+    - uses: xrtk/unity-action@main
+      name: '${{ inputs.build-target }}-Build'
+      with:
+        name: '${{ inputs.build-target }}-Build'
+        editor-path: '${{ steps.unity-validate.outputs.editor-path }}'
+        project-path: '${{ steps.unity-validate.outputs.project-path }}'
+        build-target: '${{ inputs.build-target }}'
+        args: '-quit -batchmode -executeMethod XRTK.Editor.BuildPipeline.UnityPlayerBuildTools.StartCommandLineBuild'
+
+    - name: Zip Artifacts
+      if: always()
+      run: |
+        $artifacts = "${{ steps.unity-validate.outputs.project-path }}/Builds"
+
+        if (Test-Path -Path $artifacts) {
+          Compress-Archive -Path "$artifacts/*" -DestinationPath ${{ github.workspace }}/${{ runner.os }}-${{ inputs.build-target }}-Artifacts.zip -Force
+          Remove-Item $artifacts -Force -Recurse
+        }
+      shell: pwsh
+
+    - uses: actions/upload-artifact@v2
+      name: Upload Artifacts
+      if: always()
+      with:
+        name: '${{ runner.os }}-${{ inputs.build-target }}-Artifacts'
+        path: '${{ github.workspace }}/${{ runner.os }}-${{ inputs.build-target }}-Artifacts.zip'
