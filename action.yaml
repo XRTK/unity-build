@@ -33,7 +33,7 @@ runs:
         name: 'project-validation'
         editor-path: '${{ steps.unity-validate.outputs.editor-path }}'
         project-path: '${{ steps.unity-validate.outputs.project-path }}'
-        args: ${{ join([ '-quit -batchmode -executeMethod XRTK.Editor.BuildPipeline.UnityPlayerBuildTools.ValidateProject', ${{ additional-build-args }} ], ' ') }}
+        args: [ '-quit', '-batchmode', '-executeMethod XRTK.Editor.BuildPipeline.UnityPlayerBuildTools.ValidateProject', '${{ additional-build-args }}' ]
 
     - uses: xrtk/unity-action@main
       name: '${{ inputs.build-target }}-Tests'
@@ -42,7 +42,7 @@ runs:
         editor-path: '${{ steps.unity-validate.outputs.editor-path }}'
         project-path: '${{ steps.unity-validate.outputs.project-path }}'
         build-target: '${{ inputs.build-target }}'
-        args: ${{ join([ '-batchmode -runEditorTests', ${{ additional-build-args }} ], ' ') }}
+        args: [ '-batchmode', '-runEditorTests', '${{ additional-build-args }}' ]
 
     - uses: xrtk/unity-action@main
       name: '${{ inputs.build-target }}-Build'
@@ -51,7 +51,7 @@ runs:
         editor-path: '${{ steps.unity-validate.outputs.editor-path }}'
         project-path: '${{ steps.unity-validate.outputs.project-path }}'
         build-target: '${{ inputs.build-target }}'
-        args: ${{ join([ '-quit -batchmode -executeMethod XRTK.Editor.BuildPipeline.UnityPlayerBuildTools.StartCommandLineBuild', ${{ additional-build-args }} ], ' ') }}
+        args: [ '-quit', '-batchmode', '-executeMethod', 'XRTK.Editor.BuildPipeline.UnityPlayerBuildTools.StartCommandLineBuild', '${{ additional-build-args }}' ]
 
     - name: Zip Artifacts
       if: always()
