@@ -38,13 +38,10 @@ jobs:
             build-target: StandaloneLinux64
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
-          clean: true
+      # be sure to first checkout your repo
 
       - name: Unity Build (${{ matrix.build-target }})
-        uses: xrtk/unity-build@v2
+        uses: xrtk/unity-build@v3
         with:
           build-target: ${{ matrix.build-target }}
 ```

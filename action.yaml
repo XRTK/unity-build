@@ -10,7 +10,7 @@ inputs:
     # Unity -buildTarget command line args https://docs.unity3d.com/Manual/CommandLineArguments.html
     # StandaloneWindows64, WSAPlayer, StandaloneOSX, iOS, StandaloneLinux64, Android, Lumin, WebGL
     default: ''
-  additional-valiate-args:
+  additional-validate-args:
     description: 'Additional args to pass to validate command'
     default: ''
   additional-test-args:
@@ -27,15 +27,15 @@ runs:
       name: Unity Editor Validation
       uses: xrtk/unity-validate@v2
 
-    - uses: xrtk/unity-action@main
+    - uses: xrtk/unity-action@v3
       name: Project Validation
       with:
         name: 'project-validation'
         editor-path: '${{ env.editor-path }}'
         project-path: '${{ env.project-path }}'
-        args: '-quit -batchmode -executeMethod XRTK.Editor.BuildPipeline.UnityPlayerBuildTools.ValidateProject ${{ inputs.additional-valiate-args }}'
+        args: '-quit -batchmode -executeMethod XRTK.Editor.BuildPipeline.UnityPlayerBuildTools.ValidateProject ${{ inputs.additional-validate-args }}'
 
-    - uses: xrtk/unity-action@main
+    - uses: xrtk/unity-action@v3
       name: '${{ inputs.build-target }}-Tests'
       with:
         name: '${{ inputs.build-target }}-Tests'
@@ -44,7 +44,7 @@ runs:
         build-target: '${{ inputs.build-target }}'
         args: '-batchmode -runEditorTests ${{ inputs.additional-test-args }}'
 
-    - uses: xrtk/unity-action@main
+    - uses: xrtk/unity-action@v3
       name: '${{ inputs.build-target }}-Build'
       with:
         name: '${{ inputs.build-target }}-Build'
