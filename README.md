@@ -38,7 +38,7 @@ jobs:
             build-target: StandaloneLinux64
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
           clean: true
