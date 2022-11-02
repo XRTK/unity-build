@@ -44,7 +44,7 @@ jobs:
           clean: true
 
       - name: Unity Build (${{ matrix.build-target }})
-        uses: xrtk/unity-build@main
+        uses: xrtk/unity-build@v2
         with:
           build-target: ${{ matrix.build-target }}
 ```
