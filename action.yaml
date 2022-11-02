@@ -1,62 +1,62 @@
 name: 'Unity Build (XRTK)'
 description: 'Runs a Build using the specified build targets'
 branding:
-  icon: ''
-  color: ''
+  icon: 'box'
+  color: 'blue'
 
 inputs:
   build-target:
     description: 'The build target to build for.'
     # Unity -buildTarget command line args https://docs.unity3d.com/Manual/CommandLineArguments.html
     # StandaloneWindows64, WSAPlayer, StandaloneOSX, iOS, StandaloneLinux64, Android, Lumin, WebGL
-    defaults: ''
+    default: ''
   additional-valiate-args:
     description: 'Additional args to pass to validate command'
-    defaults: ''
+    default: ''
   additional-test-args:
     description: 'Additional args to pass to test command'
-    defaults: ''
+    default: ''
   additional-build-args:
     description: 'Additional args to pass to build command'
-    defaults: ''
+    default: ''
 
 runs:
   using: "composite"
   steps:
     - id: unity-validate
       name: Unity Editor Validation
-      uses: xrtk/unity-validate@main
+      uses: xrtk/unity-validate@v2
 
-    - uses: xrtk/unity-action@main
+    - uses: xrtk/unity-action@v2
       name: Project Validation
       with:
         name: 'project-validation'
-        editor-path: '${{ steps.unity-validate.outputs.editor-path }}'
-        project-path: '${{ steps.unity-validate.outputs.project-path }}'
+        editor-path: '${{ env.editor-path }}'
+        project-path: '${{ env.project-path }}'
         args: '-quit -batchmode -executeMethod XRTK.Editor.BuildPipeline.UnityPlayerBuildTools.ValidateProject ${{ inputs.additional-valiate-args }}'
 
-    - uses: xrtk/unity-action@main
+    - uses: xrtk/unity-action@v2
       name: '${{ inputs.build-target }}-Tests'
       with:
         name: '${{ inputs.build-target }}-Tests'
-        editor-path: '${{ steps.unity-validate.outputs.editor-path }}'
-        project-path: '${{ steps.unity-validate.outputs.project-path }}'
+        editor-path: '${{ env.editor-path }}'
+        project-path: '${{ env.project-path }}'
         build-target: '${{ inputs.build-target }}'
         args: '-batchmode -runEditorTests ${{ inputs.additional-test-args }}'
 
-    - uses: xrtk/unity-action@main
+    - uses: xrtk/unity-action@v2
       name: '${{ inputs.build-target }}-Build'
       with:
         name: '${{ inputs.build-target }}-Build'
-        editor-path: '${{ steps.unity-validate.outputs.editor-path }}'
-        project-path: '${{ steps.unity-validate.outputs.project-path }}'
+        editor-path: '${{ env.editor-path }}'
+        project-path: '${{ env.project-path }}'
         build-target: '${{ inputs.build-target }}'
         args: '-quit -batchmode -executeMethod XRTK.Editor.BuildPipeline.UnityPlayerBuildTools.StartCommandLineBuild ${{ inputs.additional-build-args }}'
 
     - name: Zip Artifacts
       if: always()
       run: |
-        $artifacts = "${{ steps.unity-validate.outputs.project-path }}/Builds"
+        $artifacts = "${{ env.project-path }}/Builds"
 
         if (Test-Path -Path $artifacts) {
           Compress-Archive -Path "$artifacts/*" -DestinationPath ${{ github.workspace }}/${{ runner.os }}-${{ inputs.build-target }}-Artifacts.zip -Force
