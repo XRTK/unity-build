@@ -27,7 +27,7 @@ runs:
       name: Unity Editor Validation
       uses: xrtk/unity-validate@v2
 
-    - uses: xrtk/unity-action@v3
+    - uses: xrtk/unity-action@refactor
       name: Project Validation
       with:
         name: 'project-validation'
@@ -35,7 +35,7 @@ runs:
         project-path: '${{ env.project-path }}'
         args: '-quit -batchmode -executeMethod XRTK.Editor.BuildPipeline.UnityPlayerBuildTools.ValidateProject ${{ inputs.additional-validate-args }}'
 
-    - uses: xrtk/unity-action@v3
+    - uses: xrtk/unity-action@refactor
       name: '${{ inputs.build-target }}-Tests'
       with:
         name: '${{ inputs.build-target }}-Tests'
@@ -44,7 +44,7 @@ runs:
         build-target: '${{ inputs.build-target }}'
         args: '-batchmode -runEditorTests ${{ inputs.additional-test-args }}'
 
-    - uses: xrtk/unity-action@v3
+    - uses: xrtk/unity-action@refactor
       name: '${{ inputs.build-target }}-Build'
       with:
         name: '${{ inputs.build-target }}-Build'
