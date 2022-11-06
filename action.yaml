@@ -47,7 +47,7 @@ runs:
       if: always()
       run: |
         # Zip Artifacts
-        $artifacts = "${{ env.project-path }}/Builds"
+        $artifacts = "${{ env.UNITY_PROJECT_PATH }}/Builds"
 
         if (Test-Path -Path $artifacts) {
           Compress-Archive -Path "$artifacts/*" -DestinationPath ${{ github.workspace }}/${{ runner.os }}-${{ inputs.build-target }}-Artifacts.zip -Force
