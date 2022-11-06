@@ -25,7 +25,7 @@ runs:
   steps:
     - id: unity-setup
       name: Unity Editor Setup
-      uses: xrtk/unity-setup@v1
+      uses: xrtk/unity-setup@main
 
     - uses: xrtk/unity-action@refactor
       name: Project Validation
