@@ -23,7 +23,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: xrtk/unity-action@refactor
+    - uses: xrtk/unity-action@v4
       name: Project Validation
       with:
         log-name: 'project-validation'
