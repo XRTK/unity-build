@@ -29,14 +29,14 @@ runs:
         log-name: 'project-validation'
         args: '-quit -batchmode -executeMethod XRTK.Editor.BuildPipeline.UnityPlayerBuildTools.ValidateProject ${{ inputs.additional-validate-args }}'
 
-    - uses: xrtk/unity-action@refactor
+    - uses: xrtk/unity-action@v4
       name: '${{ inputs.build-target }}-Tests'
       with:
         log-name: '${{ inputs.build-target }}-Tests'
         build-target: '${{ inputs.build-target }}'
         args: '-batchmode -runEditorTests ${{ inputs.additional-test-args }}'
 
-    - uses: xrtk/unity-action@refactor
+    - uses: xrtk/unity-action@v4
       name: '${{ inputs.build-target }}-Build'
       with:
         log-name: '${{ inputs.build-target }}-Build'
