@@ -44,6 +44,7 @@ runs:
         args: '-quit -no-graphics -batchmode -executeMethod XRTK.Editor.BuildPipeline.UnityPlayerBuildTools.StartCommandLineBuild ${{ inputs.additional-build-args }}'
 
     - uses: josStorer/get-current-time@v2.0.2
+      if: always()
       id: current-time
       with:
         format: YYYY-MM-DDTHH.mm.ss.sssZ
