@@ -43,11 +43,16 @@ runs:
         build-target: '${{ inputs.build-target }}'
         args: '-quit -no-graphics -batchmode -executeMethod XRTK.Editor.BuildPipeline.UnityPlayerBuildTools.StartCommandLineBuild ${{ inputs.additional-build-args }}'
 
+    - uses: josStorer/get-current-time@v2.0.2
+      id: current-time
+      with:
+        format: YYYY-MM-DDTHH.mm.ss.sssZ
+
     - uses: actions/upload-artifact@v3
       name: Upload Artifacts
       if: always()
       with:
-        name: '${{ runner.os }}-${{ inputs.build-target }}-Artifacts'
+        name: '${{ runner.os }}-${{ inputs.build-target }}-Artifacts-${{ steps.current-time.outputs.time }}'
         path: '${{ env.UNITY_PROJECT_PATH }}/Builds'
 
     - name: Clean Artifacts
