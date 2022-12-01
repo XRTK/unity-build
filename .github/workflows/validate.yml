@@ -35,20 +35,20 @@ jobs:
       - name: checkout test project
         uses: actions/checkout@v3
         with:
-          repository: xrtk/com.xrtk.test
+          repository: xrtk/com.xrtk.core
           path: test-project
 
         # Installs the Unity Editor based on your project version text file
         # sets -> env.UNITY_EDITOR_PATH
         # sets -> env.UNITY_PROJECT_PATH
         # https://github.com/XRTK/unity-setup
-      - uses: xrtk/unity-setup@v4
+      - uses: xrtk/unity-setup@v5
         with:
           version-file-path: 'test-project/**/ProjectSettings/ProjectVersion.txt'
 
         # Activates the installation with the provided credentials
         # https://github.com/XRTK/activate-unity-license
-      - uses: xrtk/activate-unity-license@v1
+      - uses: xrtk/activate-unity-license@v2
         with:
           # Required
           username: ${{ secrets.UNITY_USERNAME }}
