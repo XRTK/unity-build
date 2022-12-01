@@ -22,11 +22,11 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            build-target: StandaloneLinux64
+            build-target: Android
           - os: windows-latest
             build-target: StandaloneWindows64
           - os: macos-latest
-            build-target: StandaloneOSX
+            build-target: Android
 
     steps:
       - name: checkout self
@@ -35,7 +35,7 @@ jobs:
       - name: checkout test project
         uses: actions/checkout@v3
         with:
-          repository: xrtk/com.xrtk.core
+          repository: xrtk/com.xrtk.test
           path: test-project
 
         # Installs the Unity Editor based on your project version text file
