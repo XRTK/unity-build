@@ -22,11 +22,11 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            build-target: Android
+            build-target: StandaloneLinux64
           - os: windows-latest
             build-target: StandaloneWindows64
           - os: macos-latest
-            build-target: Android
+            build-target: StandaloneOSX
 
     steps:
       - name: checkout self
