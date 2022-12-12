@@ -28,6 +28,7 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
+      #max-parallel: 2 # Use this if you're activating pro license with matrix
       matrix:
         include:
           - os: windows-latest
@@ -38,10 +39,29 @@ jobs:
             build-target: StandaloneLinux64
 
     steps:
-      # be sure to first checkout your repo
+      - uses: actions/checkout@v3
+
+        # Installs the Unity Editor based on your project version text file
+        # sets -> env.UNITY_EDITOR_PATH
+        # sets -> env.UNITY_PROJECT_PATH
+        # https://github.com/XRTK/unity-setup
+      - uses: xrtk/unity-setup@v6
+        with:
+          build-targets: ${{ matrix.build-target }}
+
+        # Activates the installation with the provided credentials
+        # https://github.com/XRTK/activate-unity-license
+      - uses: xrtk/activate-unity-license@v2
+        with:
+          # Required
+          username: ${{ secrets.UNITY_USERNAME }}
+          password: ${{ secrets.UNITY_PASSWORD }}
+          # Optional
+          serial: ${{ secrets.UNITY_SERIAL }} # Required for pro/plus activations
+          license-type: 'Personal' # Chooses license type to use [ Personal, Professional ]
 
       - name: Unity Build (${{ matrix.build-target }})
-        uses: xrtk/unity-build@v3
+        uses: xrtk/unity-build@v4
         with:
           build-target: ${{ matrix.build-target }}
 ```
