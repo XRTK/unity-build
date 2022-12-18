@@ -1,14 +1,5 @@
-# XRTK Unity Build
+name: unity-build-validation
 
-A GitHub Action that builds XRTK based projects.
-
-Part of the [Mixed Reality Toolkit (XRTK)](https://github.com/XRTK) open source project.
-
-> This action requires that your Unity project be setup and using the com.xrtk.core package.
-
-## How to use
-
-```yaml
 on:
   push:
     branches:
@@ -28,18 +19,25 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
-      #max-parallel: 2 # Use this if you're activating pro license with matrix
+      max-parallel: 2 # Use this if you're activating pro license with matrix
       matrix:
         include:
+          - os: ubuntu-latest
+            build-target: Android
           - os: windows-latest
             build-target: StandaloneWindows64
           - os: macos-latest
-            build-target: StandaloneOSX
-          - os: ubuntu-latest
-            build-target: StandaloneLinux64
+            build-target: Android
 
     steps:
-      - uses: actions/checkout@v3
+      - name: checkout self
+        uses: actions/checkout@v3
+
+      - name: checkout test project
+        uses: actions/checkout@v3
+        with:
+          repository: xrtk/com.xrtk.test
+          path: test-project
 
         # Installs the Unity Editor based on your project version text file
         # sets -> env.UNITY_EDITOR_PATH
@@ -48,20 +46,30 @@ jobs:
       - uses: xrtk/unity-setup@v6
         with:
           build-targets: ${{ matrix.build-target }}
+          version-file-path: 'test-project/**/ProjectSettings/ProjectVersion.txt'
 
         # Activates the installation with the provided credentials
         # https://github.com/XRTK/activate-unity-license
       - uses: xrtk/activate-unity-license@v2
         with:
-          # Required
           username: ${{ secrets.UNITY_USERNAME }}
           password: ${{ secrets.UNITY_PASSWORD }}
-          # Optional
           serial: ${{ secrets.UNITY_SERIAL }} # Required for pro/plus activations
-          license-type: 'Personal' # Chooses license type to use [ Personal, Professional ]
+          license-type: 'Professional' # Chooses license type to use [ Personal, Professional ]
 
       - name: Unity Build (${{ matrix.build-target }})
-        uses: xrtk/unity-build@v5
+        uses: ./ #xrtk/unity-build
         with:
           build-target: ${{ matrix.build-target }}
-```
+
+      - name: Unity Build No Tests (${{ matrix.build-target }})
+        uses: ./ #xrtk/unity-build
+        with:
+          build-target: ${{ matrix.build-target }}
+          test: false
+
+      - name: Unity Build No Artifacts (${{ matrix.build-target }})
+        uses: ./ #xrtk/unity-build
+        with:
+          build-target: ${{ matrix.build-target }}
+          publish-artifacts: false
