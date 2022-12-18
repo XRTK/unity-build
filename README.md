@@ -61,7 +61,7 @@ jobs:
           license-type: 'Personal' # Chooses license type to use [ Personal, Professional ]
 
       - name: Unity Build (${{ matrix.build-target }})
-        uses: xrtk/unity-build@v5
+        uses: xrtk/unity-build@v4
         with:
           build-target: ${{ matrix.build-target }}
 ```
